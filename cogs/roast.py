@@ -7,9 +7,7 @@ from discord.ext.commands import cooldown, BucketType, cooldown
 from config import (
     MODO_POR_DEFECTO,
     COOLDOWN_INSULTAME,
-    COOLDOWN_ROAST,
-    MODOS,
-    PREFIX
+    COOLDOWN_ROAST
 )
 
 NIVELES = {
@@ -233,16 +231,29 @@ class Roast(commands.Cog):
         self.guardar_reputacion()
     
     @commands.command()
+    @commands.command()
     async def nivel(self, ctx, miembro: discord.Member = None):
         user = miembro or ctx.author
         uid = str(user.id)
 
-        puntos = self.reputacion["usuarios"].get(uid, {}).get("puntos", 0)
+        datos = self.reputacion["usuarios"].get(uid, {"puntos": 0})
+        puntos = datos.get("puntos", 0)
 
         titulo = self.obtener_titulo(puntos)
-        await ctx.send(
-            f"{user.mention} — {puntos} puntos\nTítulo: **{titulo}**"
+        prox = self.siguiente_nivel(puntos)
+
+        mensaje = (
+            f"**{user.display_name}**\n"
+            f"{titulo}\n"
+            f"🔥 Puntos: **{puntos}**\n"
         )
+
+        if prox:
+            mensaje += f"🏅 Próximo nivel: **{prox}**"
+        else:
+            mensaje += "🏅 Nivel máximo alcanzado"
+
+        await ctx.send(mensaje)
 
     @commands.command()
     async def ranking(self, ctx):
@@ -264,16 +275,24 @@ class Roast(commands.Cog):
     def obtener_titulo(self, puntos):
         if puntos >= 50:
             return "👑 Leyenda del sarcasmo"
-        if puntos >= 30:
+        elif puntos >= 30:
             return "💀 Sin alma"
-        if puntos >= 20:
+        elif puntos >= 20:
             return "🔥 Resistente"
-        if puntos >= 10:
-            return "🧠 Adaptado"
-        if puntos >= 5:
+        elif puntos >= 10:
+            return "🧠 Adaptado al sarcasmo"
+        elif puntos >= 5:
             return "🍼 Novato"
-        return "🙂 Inocente"
-    
+        else:
+            return "🙂 Inocente"
+        
+    def siguiente_nivel(self, puntos):
+        niveles = [5, 10, 20, 30, 50]
+        for nivel in niveles:
+            if puntos < nivel:
+                return nivel
+        return None
+        
     def cargar_reputacion(self):
         if not os.path.exists("data/reputacion.json"):
             return {"usuarios": {}}
