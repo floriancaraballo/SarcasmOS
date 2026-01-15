@@ -7,12 +7,15 @@ from dotenv import load_dotenv
 from config import PREFIX
 
 # Cargar variables de entorno (.env)
-load_dotenv()
+#load_dotenv()
+#TOKEN = os.getenv("DISCORD_TOKEN")
+
 TOKEN = os.getenv("DISCORD_TOKEN")
 
-if TOKEN is None:
-    raise ValueError("❌ No se ha encontrado DISCORD_TOKEN en el archivo .env")
-
+#if TOKEN is None:
+    #raise ValueError("❌ No se ha encontrado DISCORD_TOKEN en el archivo .env")
+if not TOKEN:
+    raise ValueError("❌ No se ha encontrado DISCORD_TOKEN. Añádelo como variable de entorno en Railway")
 # Intents (permisos del bot)
 intents = discord.Intents.default()
 intents.message_content = True
