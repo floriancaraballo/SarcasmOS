@@ -231,7 +231,6 @@ class Roast(commands.Cog):
         self.guardar_reputacion()
     
     @commands.command()
-    @commands.command()
     async def nivel(self, ctx, miembro: discord.Member = None):
         user = miembro or ctx.author
         uid = str(user.id)
