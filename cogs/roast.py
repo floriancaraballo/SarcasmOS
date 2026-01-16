@@ -140,7 +140,7 @@ class Roast(commands.Cog):
             return
 
         insulto = random.choice(self.roasts[modo])
-        await ctx.send(f"{ctx.author.mention}, {insulto} 😌")
+        await ctx.send(f"{ctx.author.mention}, {insulto}")
 
         await self.sumar_punto(ctx, ctx.author.id)
 
@@ -171,7 +171,7 @@ class Roast(commands.Cog):
         modo = servidor["modo"]
         insulto = random.choice(self.roasts[modo])
 
-        await ctx.send(f"{miembro.mention}, {insulto} 😌")
+        await ctx.send(f"{miembro.mention}, {insulto} ")
         
     @commands.command(name="noroast")
     async def no_roast(self, ctx, miembro: discord.Member = None):
